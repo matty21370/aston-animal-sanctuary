@@ -10,6 +10,10 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.get("/", (req, res) => {
+    res.render("register");
+});
+
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });
