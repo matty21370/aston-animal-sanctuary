@@ -104,6 +104,17 @@ app.get('/logout', (req, res) => {
     })
 });
 
+app.get('/addstaff', (req, res) => {
+    res.render('access');
+});
+
+app.post('/addstaff', (req, res) => {
+    let _password = req.body.pass;
+    if(_password === process.env.ADMIN_PASSWORD) {
+        res.render('secret');
+    }
+});
+
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });

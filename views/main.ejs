@@ -1,9 +1,44 @@
-<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <title>Aston Animal Sanctuary</title>
+</head>
 
-<section class="hero is-link is-fullheight">
-    <div class="hero-head">
-      <p class="title2">Hello, <%= ejs_name %></p>
-    </div>
-</section>
+<body>
+    <nav class="navbar is-link is-spaced" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <strong>Aston Animal Sanctuary</strong>
+            </a>
+        </div>
+        <div class="navbar-menu is-active">
+            <div class="navbar-start">
+                
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-primary" href="https://github.com/matty21370/aston-animal-sanctuary">
+                            <strong>Github</strong>
+                        </a>
+                        <a class="button is-error" href="/logout">
+                            <strong>Sign out</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="hero is-link is-fullheight">
+        <div class="hero-head">
+        <p class="title2">Hello, <%= ejs_name %></p>
+        </div>
+    </section>
 
 <%- include('partials/footer') %>
