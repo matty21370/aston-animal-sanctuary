@@ -11,6 +11,10 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.get("/", (req, res) => {
+    res.render("home");
+});
+
+app.get("/register", (req, res) => {
     res.render("register");
 });
 
