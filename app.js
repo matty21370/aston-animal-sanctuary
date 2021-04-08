@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -12,6 +13,14 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        saveUninitialized: false,
+        resave: false
+    })
+);
+
 mongoose.connect(process.env.DB_CONNECT, {useNewUrlParser: true, useUnifiedTopology: true})
 
 const userSchema = mongoose.Schema({
@@ -23,7 +32,11 @@ const userSchema = mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 app.get("/", (req, res) => {
-    res.render("home");
+    if(req.session.username) {
+        res.redirect("main");
+    } else {
+        res.render("home");
+    }
 });
 
 app.get("/register", (req, res) => {
@@ -43,6 +56,7 @@ app.post("/register", (req, res) => {
         });
 
         _user.save();
+        req.session.username = req.body.username;
         res.redirect("/main");
     }
 });
@@ -59,6 +73,7 @@ app.post("/login", (req, res) => {
         User.findOne({username: _username}, (err, result) => {
             if(result) {
                 if(result.password === _password) {
+                    req.session.username = req.body.username;
                     res.redirect("/main");
                     console.log(_username + " has logged in.");
                 } else {
@@ -72,7 +87,17 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/main", (req, res) => {
-    res.render("main");
+    res.render("main", {ejs_name: req.session.username});
+});
+
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if(err) {
+            res.send(err);
+        }
+
+        res.redirect("/");
+    })
 });
 
 app.listen(3000, () => {
