@@ -5,6 +5,9 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 const app = express();
 
 app.use(express.static("public"));
@@ -49,16 +52,20 @@ app.post("/register", (req, res) => {
     let _password = req.body.password;
 
     if(_name && _username && _password) {
-        let _user = new User({
-            name: _name,
-            username: _username,
-            password: _password
+        bcrypt.hash(_password, saltRounds, (err, hash) => {
+            if(!err) {
+                let _user = new User({
+                    name: _name,
+                    username: _username,
+                    password: hash
+                });
+        
+                _user.save();
+                req.session.username = req.body.username;
+                res.redirect("/main");
+            }
         });
-
-        _user.save();
-        req.session.username = req.body.username;
-        res.redirect("/main");
-    }  else {
+    } else {
         res.redirect('/register');
     }
 });
@@ -72,17 +79,18 @@ app.post("/login", (req, res) => {
     let _password = req.body.password;
 
     if(_username && _password) {
-        User.findOne({username: _username}, (err, result) => {
-            if(result) {
-                if(result.password === _password) {
-                    req.session.username = req.body.username;
-                    res.redirect("/main");
-                    console.log(_username + " has logged in.");
-                } else {
-                    res.redirect("/login");
-                }
+        User.findOne({username: _username}, (err, user) => {
+            if(err) {
+                res.send(err);
             } else {
-                res.redirect("/login");
+                bcrypt.compare(_password, user.password, (err, result) => {
+                    if(result === true) {
+                        req.session.username = _username;
+                        res.redirect("/main");
+                    } else {
+                        res.redirect("/login");
+                    }
+                });
             }
         });
     } else {
