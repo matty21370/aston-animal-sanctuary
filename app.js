@@ -58,6 +58,8 @@ app.post("/register", (req, res) => {
         _user.save();
         req.session.username = req.body.username;
         res.redirect("/main");
+    }  else {
+        res.redirect('/register');
     }
 });
 
@@ -83,6 +85,8 @@ app.post("/login", (req, res) => {
                 res.redirect("/login");
             }
         });
+    } else {
+        res.redirect("/login");
     }
 });
 

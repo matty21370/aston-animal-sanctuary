@@ -14,31 +14,51 @@
     <nav class="navbar is-link is-spaced" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="/">
-                <strong>Aston Animal Sanctuary</strong>
+                <span class="icon">
+                    <i class="fab fa-github"></i>
+                </span>
+                <span>
+                    <strong>Aston Animal Sanctuary</strong>
+                </span>
             </a>
         </div>
         <div class="navbar-menu is-active">
-            <div class="navbar-start">
-                
-            </div>
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
                         <a class="button is-primary" href="https://github.com/matty21370/aston-animal-sanctuary">
                             <strong>Github</strong>
                         </a>
-                        <a class="button is-error" href="/logout">
-                            <strong>Sign out</strong>
+                        <a class="button is-danger" href="/logout">
+                            Sign out
                         </a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
-    <section class="hero is-link is-fullheight">
-        <div class="hero-head">
-        <p class="title2">Hello, <%= ejs_name %></p>
+
+    <div class="dashboard is-full-height">
+        <div class="dashboard-panel is-medium" style="background-color: rgb(228, 228, 228);">
+            <p class="menu-label">
+                General
+            </p>
+            <ul class="menu-list">
+                <li><a href="">Home</a></li>
+                <li><a href="">My profile</a></li>
+            </ul>
+            <p class="menu-label">
+                Adopt
+            </p>
+            <ul class="menu-list">
+                <li><a href="">View listings</a></li>
+            </ul>
         </div>
-    </section>
+        <div class="dashboard-main is-scrollable">
+            <p class="title2" style="color: black;">
+                Hello, <%= ejs_name %>
+            </p>
+        </div>
+    </div>
 
 <%- include('partials/footer') %>
