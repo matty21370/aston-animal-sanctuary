@@ -1,18 +1,12 @@
-.centred {
-    text-align: center;
-}
-
 .title2 {
     color: white;
     font-size: 5pc;
 }
 
-.navbar-spaced {
-    padding-left: 5%;
-    padding-right: 5%;
+.title-margin {
+    margin-top: 10%;
 }
 
-.main {
-    background-image: url("https://pixabay.com/get/gf029b7c43fc66e251cdfff6e7cfd5170e7e318597a4a5e54e149b4aa02639629e0fc07d58a46e41ac7bc084a5f098cbb.png");
-    background-color: #cccccc;
+.label-white {
+    color: white;
 }
