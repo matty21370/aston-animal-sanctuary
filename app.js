@@ -64,6 +64,7 @@ app.post("/register", (req, res) => {
         
                 _user.save();
                 req.session.username = req.body.username;
+                req.session.role = _user.role;
                 res.redirect("/main");
             }
         });
@@ -89,6 +90,7 @@ app.post("/login", (req, res) => {
                     bcrypt.compare(_password, user.password, (err, result) => {
                         if(result === true) {
                             req.session.username = _username;
+                            req.session.role = user.role;
                             res.redirect("/main");
                         } else {
                             res.redirect("/login");
@@ -106,7 +108,11 @@ app.post("/login", (req, res) => {
 
 app.get("/main", (req, res) => {
     if(req.session.username) {
-        res.render("usermain", {ejs_name: req.session.username});
+        if(req.session.role === "Client") {
+            res.render("usermain", {ejs_name: req.session.username});
+        } else if(req.session.role === "Staff") {
+            res.redirect("/staff");
+        }
     } else {
         res.redirect("/");
     }
@@ -152,6 +158,7 @@ app.post('/addstaff', (req, res) => {
                     });
                     newUser.save();
                     req.session.username = _username;
+                    req.session.role = newUser.role;
                     res.redirect("/staff");
                 }
             });
