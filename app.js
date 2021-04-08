@@ -83,14 +83,18 @@ app.post("/login", (req, res) => {
             if(err) {
                 res.send(err);
             } else {
-                bcrypt.compare(_password, user.password, (err, result) => {
-                    if(result === true) {
-                        req.session.username = _username;
-                        res.redirect("/main");
-                    } else {
-                        res.redirect("/login");
-                    }
-                });
+                if(user) {
+                    bcrypt.compare(_password, user.password, (err, result) => {
+                        if(result === true) {
+                            req.session.username = _username;
+                            res.redirect("/main");
+                        } else {
+                            res.redirect("/login");
+                        }
+                    });
+                } else {
+                    res.redirect('/login');
+                }
             }
         });
     } else {
