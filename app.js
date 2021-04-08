@@ -87,7 +87,11 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/main", (req, res) => {
-    res.render("main", {ejs_name: req.session.username});
+    if(req.session.username) {
+        res.render("main", {ejs_name: req.session.username});
+    } else {
+        res.redirect("/");
+    }
 });
 
 app.get('/logout', (req, res) => {
