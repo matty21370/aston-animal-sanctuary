@@ -109,7 +109,7 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-    res.render("signin");
+    res.render("signin", {ejs_message: null});
 });
 
 app.post("/login", (req, res) => {
@@ -128,16 +128,16 @@ app.post("/login", (req, res) => {
                             req.session.role = user.role;
                             res.redirect("/main");
                         } else {
-                            res.redirect("/login");
+                            res.render("signin", {ejs_message: "Incorrect password"});
                         }
                     });
                 } else {
-                    res.redirect('/login');
+                    res.render("signin", {ejs_message: "Invalid username"});
                 }
             }
         });
     } else {
-        res.redirect("/login");
+        res.render("signin", {ejs_message: "Please enter a username and password"});
     }
 });
 
