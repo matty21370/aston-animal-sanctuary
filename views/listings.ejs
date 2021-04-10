@@ -1,2 +1,10 @@
-<%- include("header", {ejs_signed_in: true}); %>
+<%- include("partials/header", {ejs_signed_in: true}); %>
+<% if(!ejs_staff) { %>
 <%- include("partials/userdashboard.ejs"); %>
+<% } else { %>
+<%- include("partials/staffdashboard.ejs"); %>
+<% } %>
+
+<p class="title2" style="color: black;">Listings</p>
+
+<%- include("partials/footer"); %>

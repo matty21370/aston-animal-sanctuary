@@ -210,7 +210,11 @@ app.post('/addstaff', (req, res) => {
 });
 
 app.get("/listings", (req, res) => {
-
+    if(req.session.role === "Staff") {
+        res.render("listings", {ejs_staff: true});
+    } else {
+        res.render("listings", {ejs_staff: false});
+    }
 });
 
 app.post("/listings", (req, res) => {
