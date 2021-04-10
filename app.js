@@ -8,13 +8,29 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
+
 const app = express();
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now);
+    }
+});
+
+const upload = multer({storage: storage});
 
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(bodyParser.json());
 
 app.use(
     session({
@@ -33,7 +49,26 @@ const userSchema = mongoose.Schema({
     role: String
 });
 
+const listingSchema = mongoose.Schema({
+    name: String,
+    description: String,
+    avaliability: String,
+    image:
+    {
+        data: Buffer,
+        contentType: String
+    }
+});
+
+const adoptionSchema = mongoose.Schema({
+    listing: String,
+    user: String,
+    status: String
+});
+
 const User = mongoose.model("User", userSchema);
+const Listing = mongoose.model("Listing", listingSchema);
+const Adoption = mongoose.model("Adoption", adoptionSchema);
 
 app.get("/", (req, res) => {
     if(req.session.username) {
@@ -108,11 +143,17 @@ app.post("/login", (req, res) => {
 
 app.get("/main", (req, res) => {
     if(req.session.username) {
-        if(req.session.role === "Client") {
-            res.render("usermain", {ejs_name: req.session.username});
-        } else if(req.session.role === "Staff") {
-            res.redirect("/staff");
-        }
+        Listing.find({}, (err, listings) => {
+            if(err) {
+                console.log(err);
+            } else {
+                if(req.session.role === "Staff") {
+                    res.render("main", {ejs_name: req.session.username, ejs_staff: true});
+                } else {
+                    res.render("main", {ejs_name: req.session.username, ejs_staff: false});
+                }
+            }
+        });
     } else {
         res.redirect("/");
     }
@@ -165,6 +206,16 @@ app.post('/addstaff', (req, res) => {
         } else {
             res.redirect("/addstaff");
         }
+    }
+});
+
+app.get("/listings", (req, res) => {
+
+});
+
+app.post("/listings", (req, res) => {
+    let listing = {
+
     }
 });
 

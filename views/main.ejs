@@ -1,5 +1,9 @@
 <%- include('partials/header', {ejs_signed_in: true}) %>
+<% if(!ejs_staff) { %>
 <%- include('partials/userdashboard') %>
+<% } else { %>
+<%- include('partials/staffdashboard'); %>    
+<% } %>
 
 <div class="dashboard-main is-scrollable">
     <div class="container">
