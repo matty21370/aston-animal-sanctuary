@@ -1,8 +1,8 @@
-<%- include('partials/headerloggedin') %>
+<%- include('partials/header', {ejs_signed_in: true}) %>
 <%- include('partials/staffdashboard') %>
 
 <div class="dashboard-main is-scrollable">
-    <p class="title2" style="color: black;">
+    <p class="title3">
         Hello, <%= ejs_name %>
     </p>
 </div>

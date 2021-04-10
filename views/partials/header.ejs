@@ -27,6 +27,11 @@
                         <a class="button is-primary" href="https://github.com/matty21370/aston-animal-sanctuary">
                             <strong>Github</strong>
                         </a>
+                        <% if(ejs_signed_in) { %>
+                            <a class="button is-danger" href="/logout">
+                                Sign out
+                            </a>
+                        <% } %>
                     </div>
                 </div>
             </div>
