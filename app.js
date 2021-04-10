@@ -217,9 +217,11 @@ app.get("/listings", (req, res) => {
     }
 });
 
-app.post("/listings", (req, res) => {
-    let listing = {
-
+app.get("/addlisting", (req, res) => {
+    if(req.session.role === "Staff") {
+        res.render("addlisting");
+    } else {
+        res.redirect("/");
     }
 });
 

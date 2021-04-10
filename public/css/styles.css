@@ -4,8 +4,11 @@
 }
 
 .title3 {
-  color: black;
   font-size: 3pc;
+}
+
+.black {
+  color: black;
 }
 
 .active-alt {
