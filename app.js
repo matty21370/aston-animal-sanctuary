@@ -52,12 +52,12 @@ const userSchema = mongoose.Schema({
 const listingSchema = mongoose.Schema({
     name: String,
     description: String,
-    avaliability: String,
-    image:
-    {
-        data: Buffer,
-        contentType: String
-    }
+    avaliability: String
+    //image:
+    //{
+    //    data: Buffer,
+    //    contentType: String
+    //}
 });
 
 const adoptionSchema = mongoose.Schema({
@@ -79,7 +79,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-    res.render("register");
+    res.render("register", {ejs_message: null});
 });
 
 app.post("/register", (req, res) => {
@@ -88,23 +88,33 @@ app.post("/register", (req, res) => {
     let _password = req.body.password;
 
     if(_name && _username && _password) {
-        bcrypt.hash(_password, saltRounds, (err, hash) => {
+        User.findOne({username: _username}, (err, result) => {
             if(!err) {
-                let _user = new User({
-                    name: _name,
-                    username: _username,
-                    password: hash,
-                    role: "Client"
-                });
-        
-                _user.save();
-                req.session.username = req.body.username;
-                req.session.role = _user.role;
-                res.redirect("/main");
+                if(result) {
+                    res.render("register", {ejs_message: "Username already taken"});
+                } else {
+                    bcrypt.hash(_password, saltRounds, (err, hash) => {
+                        if(!err) {
+                            let _user = new User({
+                                name: _name,
+                                username: _username,
+                                password: hash,
+                                role: "Client"
+                            });
+                    
+                            _user.save();
+                            req.session.username = req.body.username;
+                            req.session.role = _user.role;
+                            res.redirect("/main");
+                        }
+                    });
+                }
+            } else {
+                res.send(err);
             }
         });
     } else {
-        res.redirect('/register');
+        res.render('register', {ejs_message: "Please fill out all fields"});
     }
 });
 
@@ -210,18 +220,42 @@ app.post('/addstaff', (req, res) => {
 });
 
 app.get("/listings", (req, res) => {
-    if(req.session.role === "Staff") {
-        res.render("listings", {ejs_staff: true});
-    } else {
-        res.render("listings", {ejs_staff: false});
-    }
+    Listing.find({}, (err, results) => {
+        if(err) {
+            res.send(err);
+        } else {
+            if(req.session.role === "Staff") {
+                res.render("listings", {ejs_staff: true, ejs_listings: results});
+            } else {
+                res.render("listings", {ejs_staff: false, ejs_listings: results});
+            }
+        }
+    });
 });
 
 app.get("/addlisting", (req, res) => {
     if(req.session.role === "Staff") {
-        res.render("addlisting");
+        res.render("addlisting", {ejs_message: null});
     } else {
         res.redirect("/");
+    }
+});
+
+app.post("/addlisting", (req, res) => {
+    if(req.session.role === "Staff") {
+        if(req.body.listingName && req.body.listingDescription) {
+            let newListing = new Listing({
+                name: req.body.listingName,
+                description: req.body.listingDescription,
+                avaliability: "Avaliable"
+            });
+            newListing.save();
+            res.render("addListing", {ejs_message: "Listing successfully added"});
+        } else {
+            res.redirect("/addlisting");
+        }
+    } else {
+        res.send("You do not have permission to perform this action.");
     }
 });
 

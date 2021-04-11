@@ -5,6 +5,44 @@
 <%- include("partials/staffdashboard.ejs"); %>
 <% } %>
 
-<p class="title3 black">Listings</p>
+<div class="dashboard-main is-scrollable">
+        <div class="section">
+            <div class="columns">
+                <div class="column">
+                    <h1 class="title" style="color: black;">All listings</h1>
+                    <br>
+                </div>
+            </div>
+            <div class="row columns is-multiline">
+                <% ejs_listings.forEach(listing => { %>
+                    <div class="column is-4">
+                        <div class="card large">
+                            <div class="card-image">
+                                <figure class="image is-16by9">
+                                    <img src="https://source.unsplash.com/h-ACUrBngrw/1280x720" alt="Image">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <div class="media">
+                                    <div class="media-content">
+                                        <p class="title"><%= listing.name %></p>
+                                    </div>
+                                    <div class="media-right">
+                                        <button class="button is-primary">Adopt</button>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <%= listing.description %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </div> 
+</div>
+
+
 
 <%- include("partials/footer"); %>

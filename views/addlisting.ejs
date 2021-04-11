@@ -1,6 +1,31 @@
 <%- include("partials/header", {ejs_signed_in: true}); %>
 <%- include("partials/staffdashboard"); %>
 
-<p class="title3 black">Add a listing</p>
+<div class="container">
+    <p class="title3 black">Add a listing</p>
+    <br>
+    <form action="/addlisting" method="post">
+        <div class="field">
+            <label class="label">Listing name</label>
+            <div class="control">
+                <input name="listingName" class="input" type="text">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Description</label>
+            <input name="listingDescription" class="input" type="text">
+        </div>
+        <div class="field">
+            <label class="label">Date of birth</label>
+            <input class="input" type="date" name="" id="">
+        </div>
+        <button class="button is-primary" type="submit">Add</button>
+        <% if(ejs_message) { %>
+            <br>
+            <p style="color: green;"><%= ejs_message %></p>
+            <br>
+        <% } %>
+    </form>
+</div>
 
 <%- include("partials/footer"); %>

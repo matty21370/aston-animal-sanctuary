@@ -25,6 +25,12 @@
                         <input name="password" class="input" type="password" placeholder="">
                     </div>
                 </div>
+                <% if(ejs_message) { %>
+                    <div>
+                        <p style="color: red;"><%= ejs_message %></p>
+                    </div>
+                    <br>
+                <% } %>
                 <div class="field is-grouped">
                     <div class="control">
                         <button class="button is-primary" type="submit">Submit</button>
