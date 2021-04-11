@@ -27,12 +27,11 @@
                                     <div class="media-content">
                                         <p class="title"><%= listing.name %></p>
                                     </div>
-                                    <div class="media-right">
-                                        <button class="button is-primary">Adopt</button>
-                                    </div>
                                 </div>
                                 <div class="content">
-                                    <%= listing.description %>
+                                    <p><%= listing.description %></p>
+                                    <p style="color: grey;">Date of birth: <%= listing.dob.getDate() + "/" + listing.dob.getMonth() + "/" + listing.dob.getFullYear() %></p>
+                                    <button class="button is-primary">Adopt</button>
                                 </div>
                             </div>
                         </div>

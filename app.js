@@ -52,6 +52,7 @@ const userSchema = mongoose.Schema({
 const listingSchema = mongoose.Schema({
     name: String,
     description: String,
+    dob: Date,
     avaliability: String
     //image:
     //{
@@ -247,6 +248,7 @@ app.post("/addlisting", (req, res) => {
             let newListing = new Listing({
                 name: req.body.listingName,
                 description: req.body.listingDescription,
+                dob: req.body.dateOfBirth,
                 avaliability: "Avaliable"
             });
             newListing.save();
