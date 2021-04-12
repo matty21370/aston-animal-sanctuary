@@ -73,7 +73,7 @@ const Adoption = mongoose.model("Adoption", adoptionSchema);
 
 app.get("/", (req, res) => {
     if(req.session.username) {
-        res.redirect("main");
+        res.redirect("listings");
     } else {
         res.render("home");
     }
@@ -106,7 +106,7 @@ app.post("/register", (req, res) => {
                             _user.save();
                             req.session.username = req.body.username;
                             req.session.role = _user.role;
-                            res.redirect("/main");
+                            res.redirect("/");
                         }
                     });
                 }
@@ -137,7 +137,7 @@ app.post("/login", (req, res) => {
                         if(result === true) {
                             req.session.username = _username;
                             req.session.role = user.role;
-                            res.redirect("/main");
+                            res.redirect("/");
                         } else {
                             res.render("signin", {ejs_message: "Incorrect password"});
                         }
@@ -221,17 +221,25 @@ app.post('/addstaff', (req, res) => {
 });
 
 app.get("/listings", (req, res) => {
-    Listing.find({}, (err, results) => {
-        if(err) {
-            res.send(err);
-        } else {
-            if(req.session.role === "Staff") {
-                res.render("listings", {ejs_staff: true, ejs_listings: results});
+    if(req.session.username) {
+        Listing.find({}, (err, results) => {
+            if(err) {
+                res.send(err);
             } else {
-                res.render("listings", {ejs_staff: false, ejs_listings: results});
+                if(req.session.role === "Staff") {
+                    res.render("listings", {ejs_staff: true, ejs_listings: results});
+                } else {
+                    res.render("listings", {ejs_staff: false, ejs_listings: results});
+                }
             }
-        }
-    });
+        });
+    } else {
+        res.redirect("/");
+    }
+});
+
+app.get("/test", (req, res) => {
+    res.send("test");
 });
 
 app.get("/addlisting", (req, res) => {
@@ -265,6 +273,8 @@ app.get("/staff", (req, res) => {
     res.render("staffmain", {ejs_name: req.session.username});
 });
 
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
-});
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+app.listen(port);
