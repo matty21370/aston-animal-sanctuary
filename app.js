@@ -211,7 +211,7 @@ app.post('/addstaff', (req, res) => {
                     newUser.save();
                     req.session.username = _username;
                     req.session.role = newUser.role;
-                    res.redirect("/staff");
+                    res.redirect("/");
                 }
             });
         } else {
