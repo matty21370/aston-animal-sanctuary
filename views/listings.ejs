@@ -19,7 +19,8 @@
                         <div class="card large">
                             <div class="card-image">
                                 <figure class="image is-16by9">
-                                    <img src="https://source.unsplash.com/h-ACUrBngrw/1280x720" alt="Image">
+                                    <img src="data:image/<%=listing.image.contentType%>;base64,
+                                    <%=listing.image.data.toString('base64')%>">
                                 </figure>
                             </div>
                             <div class="card-content">

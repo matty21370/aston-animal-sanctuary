@@ -4,7 +4,7 @@
 <div class="container">
     <p class="title3 black">Add a listing</p>
     <br>
-    <form action="/addlisting" method="post">
+    <form action="/addlisting" method="post" enctype="multipart/form-data">
         <div class="field">
             <label class="label">Listing name</label>
             <div class="control">
@@ -18,6 +18,11 @@
         <div class="field">
             <label class="label">Date of birth</label>
             <input class="input" type="date" name="dateOfBirth" id="">
+        </div>
+        <div>
+            <label for="image">Upload Image</label>
+            <input type="file" id="image"
+                   name="image" value="" required>
         </div>
         <button class="button is-primary" type="submit">Add</button>
         <% if(ejs_message) { %>

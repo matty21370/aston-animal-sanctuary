@@ -10,20 +10,21 @@ const saltRounds = 10;
 
 const fs = require('fs');
 const path = require('path');
-const multer = require('multer');
 
 const app = express();
 
-const storage = multer.diskStorage({
+var multer = require('multer');
+ 
+var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads');
+        cb(null, 'uploads')
     },
     filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now);
+        cb(null, file.fieldname + '-' + Date.now())
     }
 });
-
-const upload = multer({storage: storage});
+ 
+var upload = multer({ storage: storage });
 
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
@@ -53,12 +54,12 @@ const listingSchema = mongoose.Schema({
     name: String,
     description: String,
     dob: Date,
-    avaliability: String
-    //image:
-    //{
-    //    data: Buffer,
-    //    contentType: String
-    //}
+    avaliability: String,
+    image:
+    {
+        data: Buffer,
+        contentType: String
+    }
 });
 
 const adoptionSchema = mongoose.Schema({
@@ -250,17 +251,27 @@ app.get("/addlisting", (req, res) => {
     }
 });
 
-app.post("/addlisting", (req, res) => {
+app.post("/addlisting", upload.single('image'), (req, res, next) => {
     if(req.session.role === "Staff") {
         if(req.body.listingName && req.body.listingDescription) {
-            let newListing = new Listing({
+            let listing = {
                 name: req.body.listingName,
                 description: req.body.listingDescription,
                 dob: req.body.dateOfBirth,
-                avaliability: "Avaliable"
+                avaliability: "Avaliable",
+                image: {
+                    data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+                    contentType: 'image/png'
+                }
+            }
+            Listing.create(listing, (err, item) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    res.redirect("/");
+                }
             });
-            newListing.save();
-            res.render("addListing", {ejs_message: "Listing successfully added"});
+            //res.render("addListing", {ejs_message: "Listing successfully added"});
         } else {
             res.redirect("/addlisting");
         }
