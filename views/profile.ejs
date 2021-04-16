@@ -1,0 +1,58 @@
+<%- include('partials/header', {ejs_signed_in: true}) %>
+<% if(!ejs_staff) { %>
+<%- include('partials/userdashboard') %>
+<% } else { %>
+<%- include('partials/staffdashboard'); %>    
+<% } %>
+
+<div class="dashboard-main is-scrollable">
+    <div class="section">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title" style="color: black;">My Profile</h1>
+                <br>
+            </div>
+        </div>
+        <% if(!ejs_edit_mode) { %>
+            <div class="field">
+                <p class="label">Name</p>
+                <p><%= ejs_name %></p>
+            </div>
+            
+            <div class="field">
+                <p class="label">Username</p>
+                <p><%= ejs_username %></p>
+            </div>
+
+            <div class="field">
+                <p class="label">Role</p>
+                <p><%= ejs_role %></p>
+            </div>
+            <br>
+            <form action="/profile" method="post">
+                <button class="button is-primary" type="submit">Edit Profile</button>
+            </form>
+        <% } else { %>
+            <form action="/editprofile" method="post">
+                <div class="field">
+                    <p class="label">Name</p>
+                    <input class="input" type="text" name="form_name" id="" value="<%= ejs_name %>">
+                </div>
+                
+                <div class="field">
+                    <p class="label">Username</p>
+                    <input class="input" type="text" name="form_username" id="" value="<%= ejs_username %>">
+                </div>
+
+                <div class="field">
+                    <p class="label">Role</p>
+                    <p><%= ejs_role %></p>
+                </div>
+                <br>
+                <button class="button is-primary" type="submit">Save</button>
+            </form>
+        <% } %>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -106,6 +106,7 @@ app.post("/register", (req, res) => {
                     
                             _user.save();
                             req.session.username = req.body.username;
+                            req.session.fullname = req.body.name;
                             req.session.role = _user.role;
                             res.redirect("/");
                         }
@@ -138,6 +139,7 @@ app.post("/login", (req, res) => {
                         if(result === true) {
                             req.session.username = _username;
                             req.session.role = user.role;
+                            req.session.fullname = user.name;
                             res.redirect("/");
                         } else {
                             res.render("signin", {ejs_message: "Incorrect password"});
@@ -211,6 +213,7 @@ app.post('/addstaff', (req, res) => {
                     });
                     newUser.save();
                     req.session.username = _username;
+                    req.session.fullname = _name;
                     req.session.role = newUser.role;
                     res.redirect("/");
                 }
@@ -282,6 +285,28 @@ app.post("/addlisting", upload.single('image'), (req, res, next) => {
 
 app.get("/staff", (req, res) => {
     res.render("staffmain", {ejs_name: req.session.username});
+});
+
+app.get("/profile", (req, res) => {
+    res.render("profile", {ejs_staff: req.session.role === "Staff", ejs_edit_mode: false, ejs_username: req.session.username, ejs_name: req.session.fullname, ejs_role: req.session.role});
+});
+
+app.post("/profile", (req, res) => {
+    res.render("profile", {ejs_staff: req.session.role === "Staff", ejs_edit_mode: true, ejs_username: req.session.username, ejs_name: req.session.fullname, ejs_role: req.session.role});
+});
+
+app.post("/editprofile", (req, res) => {
+    let _newName = req.body.form_name;
+    let _newUsername = req.body.form_username;
+    User.updateOne({username: req.session.username}, {name: _newName, username: _newUsername}, (err, result) => {
+        if(err) {
+            console.log(err);
+        } else {
+            req.session.fullname = _newName;
+            req.session.username = _newUsername;
+            res.redirect("/profile");
+        }
+    });
 });
 
 let port = process.env.PORT;
