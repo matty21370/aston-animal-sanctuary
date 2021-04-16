@@ -9,6 +9,20 @@
                 <br>
             </div>
         </div>
+        <table class="table">
+            <thead>
+                <th><abbr title="ListingID">Listing ID</abbr></th>
+                <th><abbr title="Status">Status</abbr></th>
+            </thead>
+            <tbody>
+                <% ejs_listings.forEach(listing => { %>
+                    <tr>
+                        <td><%= listing.listing %></td>
+                        <td><%= listing.status %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
     </div>
 </div>
 

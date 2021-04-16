@@ -335,7 +335,6 @@ app.get("/requests", (req, res) => {
 });
 
 app.post("/approve", (req, res) => {
-    console.log(req.body.approveButton);
     Adoption.updateOne({_id: req.body.approveButton}, {status: "Approved"}, (err, result) => {
         if(!err) {
             res.redirect("/requests");
@@ -346,13 +345,29 @@ app.post("/approve", (req, res) => {
 });
 
 app.post("/deny", (req, res) => {
-    console.log(req.body.denyButton);
-    res.redirect("/requests");
+    Adoption.updateOne({_id: req.body.denyButton}, {status: "Denied"}, (err, result) => {
+        if(!err) {
+            console.log(result._id);
+            res.redirect("/requests");
+        } else {
+            console.log(err);
+        }
+    })
 });
 
 app.get("/adoptions", (req, res) => {
     if(req.session.role === "Client") {
-        res.render("userlistings");
+        Adoption.find({user: req.session.username}, (err, results) => {
+            if(!err) {
+                if(results) {
+                    res.render("userlistings", {ejs_listings: results});
+                } else {
+                    res.send("You have no adoption requests");
+                }
+            } else {
+                console.log(err);
+            }
+        });
     } else {
         res.redirect("/");
     }

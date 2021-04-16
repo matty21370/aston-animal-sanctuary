@@ -33,7 +33,11 @@
                                     <p><%= listing.description %></p>
                                     <p style="color: grey;">Date of birth: <%= listing.dob.getDate() + "/" + listing.dob.getMonth() + "/" + listing.dob.getFullYear() %></p>
                                     <form action="/adopt" method="post">
-                                        <button name="adoptButton" value="<%= listing._id %>" type="submit" class="button is-primary">Adopt</button>
+                                        <% if(!ejs_staff) { %>
+                                            <button name="adoptButton" value="<%= listing._id %>" type="submit" class="button is-primary">Adopt</button>
+                                        <% } else { %>
+                                            <button name="adoptButton" value="<%= listing._id %>" type="submit" class="button is-primary" disabled>Adopt</button>
+                                        <% } %>
                                     </form>
                                 </div>
                             </div>
