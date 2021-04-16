@@ -309,6 +309,31 @@ app.post("/editprofile", (req, res) => {
     });
 });
 
+app.post("/adopt", (req, res) => {
+    console.log(req.body.adoptButton);
+    let newAdoption = new Adoption({
+        listing: req.body.adoptButton,
+        user: req.session.username,
+        status : "Requested"
+    });
+    newAdoption.save();
+    res.redirect("/");
+});
+
+app.get("/requests", (req, res) => {
+    if(req.session.role === "Staff") {
+        Adoption.find({}, (err, results) => {
+            if(!err) {
+                res.render("requests", {ejs_listings: results});
+            } else {
+                console.log(err);
+            }
+        });
+    } else {
+        res.redirect("/");
+    }
+});
+
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;

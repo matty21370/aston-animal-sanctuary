@@ -1,0 +1,37 @@
+<%- include("partials/header", {ejs_signed_in: true}); %>
+<%- include("partials/staffdashboard"); %>
+
+<div class="dashboard-main is-scrollable">
+    <div class="section">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title" style="color: black;">Adoption Requests</h1>
+                <br>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <th><abbr title="User">User</abbr></th>
+                <th><abbr title="ListingID">Listing ID</abbr></th>
+                <th><abbr title="Approve"></abbr></th>
+                <th><abbr title="Deny"></abbr></th>
+            </thead>
+            <tbody>
+                <% ejs_listings.forEach(listing => { %>
+                    <tr>
+                        <td><%= listing.user %></td>
+                        <td><%= listing.listing %></td>
+                        <form action="/approve" method="post">
+                            <td><button name="approveButton" value="<%=listing._id%>" class="button is-success" type="submit">Approve</button></td>
+                        </form>
+                        <form action="/deny" method="post">
+                            <td><button name="approveButton" value="<%=listing._id%>" class="button is-danger" type="submit">Deny</button></td>
+                        </form>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<%- include("partials/footer"); %>

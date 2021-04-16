@@ -32,7 +32,9 @@
                                 <div class="content">
                                     <p><%= listing.description %></p>
                                     <p style="color: grey;">Date of birth: <%= listing.dob.getDate() + "/" + listing.dob.getMonth() + "/" + listing.dob.getFullYear() %></p>
-                                    <button class="button is-primary">Adopt</button>
+                                    <form action="/adopt" method="post">
+                                        <button name="adoptButton" value="<%= listing._id %>" type="submit" class="button is-primary">Adopt</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
