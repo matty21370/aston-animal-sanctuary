@@ -322,13 +322,37 @@ app.post("/adopt", (req, res) => {
 
 app.get("/requests", (req, res) => {
     if(req.session.role === "Staff") {
-        Adoption.find({}, (err, results) => {
+        Adoption.find({status: "Requested"}, (err, results) => {
             if(!err) {
                 res.render("requests", {ejs_listings: results});
             } else {
                 console.log(err);
             }
         });
+    } else {
+        res.redirect("/");
+    }
+});
+
+app.post("/approve", (req, res) => {
+    console.log(req.body.approveButton);
+    Adoption.updateOne({_id: req.body.approveButton}, {status: "Approved"}, (err, result) => {
+        if(!err) {
+            res.redirect("/requests");
+        } else {
+            console.log(err);
+        }
+    })
+});
+
+app.post("/deny", (req, res) => {
+    console.log(req.body.denyButton);
+    res.redirect("/requests");
+});
+
+app.get("/adoptions", (req, res) => {
+    if(req.session.role === "Client") {
+        res.render("userlistings");
     } else {
         res.redirect("/");
     }
