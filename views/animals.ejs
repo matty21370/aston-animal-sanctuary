@@ -1,0 +1,31 @@
+<%- include("partials/header", {ejs_signed_in: true}); %>
+<%- include("partials/staffdashboard"); %>
+
+<div class="dashboard-main is-scrollable">
+    <div class="section">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title" style="color: black;">All Animals</h1>
+                <br>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <th><abbr title="Name">Name</abbr></th>
+                <th><abbr title="Status">Status</abbr></th>
+                <th><abbr title="Adoptor">Adoptor</abbr></th>
+            </thead>
+            <tbody>
+                <% ejs_animals.forEach(animal => { %>
+                    <tr>
+                        <td><%= animal.name %></td>
+                        <td><%= animal.status %></td>
+                        <td><%= animal.adoptor %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<%- include("partials/footer"); %>

@@ -50,6 +50,13 @@ const userSchema = mongoose.Schema({
     role: String
 });
 
+const animalSchema = mongoose.Schema({
+    name: String,
+    status: String,
+    adoptor: String,
+    listingID: String
+});
+
 const listingSchema = mongoose.Schema({
     name: String,
     description: String,
@@ -69,16 +76,10 @@ const adoptionSchema = mongoose.Schema({
     status: String
 });
 
-const pastListingSchema = mongoose.Schema({
-    name: String,
-    description: String,
-    user: String
-});
-
 const User = mongoose.model("User", userSchema);
+const Animal = mongoose.model("Animal", animalSchema);
 const Listing = mongoose.model("Listing", listingSchema);
 const Adoption = mongoose.model("Adoption", adoptionSchema);
-const PastListing = mongoose.model("PastListing", pastListingSchema);
 
 app.get("/", (req, res) => {
     if(req.session.username) {
@@ -279,6 +280,13 @@ app.post("/addlisting", upload.single('image'), (req, res, next) => {
                 if(err) {
                     console.log(err);
                 } else {
+                    let animal = new Animal({
+                        name: req.body.listingName,
+                        status: "Avaliable",
+                        adoptor: "",
+                        listingID: item._id
+                    });
+                    animal.save();
                     res.redirect("/");
                 }
             });
@@ -359,13 +367,16 @@ app.post("/approve", (req, res) => {
                     console.log(err);
                 } else {
                     if(result && remove) {
-                        let _listing = new PastListing({
-                            name: remove.name,
-                            description: remove.description,
-                            user: result.user
+                        console.log(result.user);
+                        Adoption.findById(req.body.listingID, (err, adoption) => {
+                            Animal.updateOne({listingID: req.body.approveButton}, {status: "Adopted", adoptor: adoption.user}, (err, item) => {
+                                if(!err) {
+                                    res.redirect("/requests");
+                                } else {
+                                    console.log(err);
+                                }
+                            });
                         });
-                        _listing.save();
-                        res.redirect("/requests");
                     } else {
                         console.log("Could not find result");
                         res.redirect("/requests");
@@ -426,8 +437,18 @@ app.post("/remove", (req, res) => {
     }
 });
 
-app.post("/removeall", (req, res) => {
-    
+app.get("/animals", (req, res) => {
+    if(req.session.role === "Staff") {
+        Animal.find({}, (err, results) =>   {
+            if(!err) {
+                res.render("animals", {ejs_animals: results});
+            } else {
+                console.log(err);
+            }
+        });
+    } else {
+        res.redirect("/");
+    }
 });
 
 let port = process.env.PORT;
