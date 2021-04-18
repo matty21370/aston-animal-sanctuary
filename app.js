@@ -64,13 +64,21 @@ const listingSchema = mongoose.Schema({
 
 const adoptionSchema = mongoose.Schema({
     listing: String,
+    name: String,
     user: String,
     status: String
+});
+
+const pastListingSchema = mongoose.Schema({
+    name: String,
+    description: String,
+    user: String
 });
 
 const User = mongoose.model("User", userSchema);
 const Listing = mongoose.model("Listing", listingSchema);
 const Adoption = mongoose.model("Adoption", adoptionSchema);
+const PastListing = mongoose.model("PastListing", pastListingSchema);
 
 app.get("/", (req, res) => {
     if(req.session.username) {
@@ -311,13 +319,22 @@ app.post("/editprofile", (req, res) => {
 
 app.post("/adopt", (req, res) => {
     console.log(req.body.adoptButton);
-    let newAdoption = new Adoption({
-        listing: req.body.adoptButton,
-        user: req.session.username,
-        status : "Requested"
+    Listing.findById(req.body.adoptButton, (err, result) => {
+        if(result) {
+            if(!err) {
+                let newAdoption = new Adoption({
+                    listing: result._id,
+                    name: result.name,
+                    user: req.session.username,
+                    status : "Requested"
+                });
+                newAdoption.save();
+                res.redirect("/");
+            }
+        } else {
+            res.send("Error");
+        }
     });
-    newAdoption.save();
-    res.redirect("/");
 });
 
 app.get("/requests", (req, res) => {
@@ -335,9 +352,28 @@ app.get("/requests", (req, res) => {
 });
 
 app.post("/approve", (req, res) => {
-    Adoption.updateOne({_id: req.body.approveButton}, {status: "Approved"}, (err, result) => {
+    Adoption.updateOne({_id: req.body.listingID}, {status: "Approved"}, (err, result) => {
+        console.log(req.body.listingID);
         if(!err) {
-            res.redirect("/requests");
+            console.log(req.body.approveButton);
+            Listing.findByIdAndDelete(req.body.approveButton, (err, remove) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    if(result && remove) {
+                        let _listing = new PastListing({
+                            name: remove.name,
+                            description: remove.description,
+                            user: result.user
+                        });
+                        _listing.save();
+                        res.redirect("/requests");
+                    } else {
+                        console.log("Could not find result");
+                        res.redirect("/requests");
+                    }
+                }
+            });
         } else {
             console.log(err);
         }
@@ -371,6 +407,30 @@ app.get("/adoptions", (req, res) => {
     } else {
         res.redirect("/");
     }
+});
+
+app.post("/remove", (req, res) => {
+    if(req.session.role === "Staff") {
+        Listing.findOneAndRemove({_id: req.body.removeButton}, (err, result) => {
+            if(err) {
+                console.log(err);
+            } else {
+                Adoption.updateOne({_id: req.body.removeButton}, {status: "Listing removed"}, (err, update) => {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        res.redirect("/");
+                    }
+                });
+            }
+        });
+    } else {
+        res.redirect("/");
+    }
+});
+
+app.post("/removeall", (req, res) => {
+    
 });
 
 let port = process.env.PORT;

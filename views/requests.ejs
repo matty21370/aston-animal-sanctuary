@@ -13,6 +13,7 @@
             <thead>
                 <th><abbr title="User">User</abbr></th>
                 <th><abbr title="ListingID">Listing ID</abbr></th>
+                <th><abbr title="ListingName">Listing Name</abbr></th>
                 <th><abbr title="Approve"></abbr></th>
                 <th><abbr title="Deny"></abbr></th>
             </thead>
@@ -21,11 +22,13 @@
                     <tr>
                         <td><%= listing.user %></td>
                         <td><%= listing.listing %></td>
+                        <td><%= listing.name %></td>
                         <form action="/approve" method="post">
-                            <td><button name="approveButton" value="<%=listing._id%>" class="button is-success" type="submit">Approve</button></td>
+                            <input type="hidden" name="listingID" value="<%=listing._id%>">
+                            <td><button name="approveButton" value="<%=listing.listing %>" class="button is-success" type="submit">Approve</button></td>
                         </form>
                         <form action="/deny" method="post">
-                            <td><button name="denyButton" value="<%=listing._id%>" class="button is-danger" type="submit">Deny</button></td>
+                            <td><button name="denyButton" value="<%=listing.listing%>" class="button is-danger" type="submit">Deny</button></td>
                         </form>
                     </tr>
                 <% }); %>
