@@ -326,21 +326,31 @@ app.post("/editprofile", (req, res) => {
 });
 
 app.post("/adopt", (req, res) => {
-    console.log(req.body.adoptButton);
     Listing.findById(req.body.adoptButton, (err, result) => {
         if(result) {
             if(!err) {
-                let newAdoption = new Adoption({
-                    listing: result._id,
-                    name: result.name,
-                    user: req.session.username,
-                    status : "Requested"
-                });
-                newAdoption.save();
-                res.redirect("/");
+                Adoption.find({listing: result._id, user: req.session.username}, (err, results) => {
+                    if(!err) {
+                        if(!results.length) {
+                            let newAdoption = new Adoption({
+                                listing: result._id,
+                                name: result.name,
+                                user: req.session.username,
+                                status : "Requested"
+                            });
+                            newAdoption.save();
+                            res.redirect("/");
+                        } else {
+                            res.send('<script>alert("Already requested this animal."); window.location.href = "/"; </script>');
+                        }
+                    } else {
+                        console.log(err);
+                    }
+                })
+                
             }
         } else {
-            res.send("Error");
+            res.send("How did this happen");
         }
     });
 });
@@ -374,6 +384,8 @@ app.post("/approve", (req, res) => {
                                     Adoption.updateMany({listing: req.body.approveButton, user: {$ne: adoption.user}}, {status: "Denied"}, (err, docs) => {
                                         if(!err) {
                                             res.redirect("/requests");
+                                        } else {
+                                            console.log(err);
                                         }
                                     });
                                     
@@ -383,7 +395,6 @@ app.post("/approve", (req, res) => {
                             });
                         });
                     } else {
-                        console.log("Could not find result");
                         res.redirect("/requests");
                     }
                 }
