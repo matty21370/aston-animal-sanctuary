@@ -1,0 +1,31 @@
+<%- include("partials/header", {ejs_signed_in: true}); %>
+<%- include("partials/staffdashboard"); %>
+
+<div class="dashboard-main is-scrollable">
+    <div class="section">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title" style="color: black;">All Requests</h1>
+                <br>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <th><abbr title="Name">Name</abbr></th>
+                <th><abbr title="Status">User</abbr></th>
+                <th><abbr title="Adoptor">Status</abbr></th>
+            </thead>
+            <tbody>
+                <% ejs_adoptions.forEach(adoption => { %>
+                    <tr>
+                        <td><%= adoption.name %></td>
+                        <td><%= adoption.user %></td>
+                        <td><%= adoption.status %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<%- include("partials/footer"); %>

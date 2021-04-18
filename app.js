@@ -451,6 +451,16 @@ app.get("/animals", (req, res) => {
     }
 });
 
+app.get("/allrequests", (req, res) => {
+    if(req.session.role === "Staff") {
+        Adoption.find({}, (req, adoptions) => {
+            res.render("adoptions", {ejs_adoptions: adoptions});
+        });
+    } else {
+        res.redirect("/");
+    }
+});
+
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;
