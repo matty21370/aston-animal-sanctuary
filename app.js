@@ -371,7 +371,12 @@ app.post("/approve", (req, res) => {
                         Adoption.findById(req.body.listingID, (err, adoption) => {
                             Animal.updateOne({listingID: req.body.approveButton}, {status: "Adopted", adoptor: adoption.user}, (err, item) => {
                                 if(!err) {
-                                    res.redirect("/requests");
+                                    Adoption.updateMany({listing: req.body.approveButton, user: {$ne: adoption.user}}, {status: "Denied"}, (err, docs) => {
+                                        if(!err) {
+                                            res.redirect("/requests");
+                                        }
+                                    });
+                                    
                                 } else {
                                     console.log(err);
                                 }
