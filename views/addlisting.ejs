@@ -8,21 +8,21 @@
         <div class="field">
             <label class="label">Listing name</label>
             <div class="control">
-                <input name="listingName" class="input" type="text">
+                <input name="listingName" class="input" type="text" required>
             </div>
         </div>
         <div class="field">
             <label class="label">Description</label>
-            <input name="listingDescription" class="input" type="text">
+            <input name="listingDescription" class="input" type="text" required>
         </div>
         <div class="field">
             <label class="label">Date of birth</label>
-            <input class="input" type="date" name="dateOfBirth" id="">
+            <input class="input" type="date" name="dateOfBirth" id="" required>
         </div>
         <div>
             <label for="image">Upload Image</label>
             <input type="file" id="image"
-                   name="image" value="" required>
+                   name="image" accept="image/*" value="" required>
         </div>
         <button class="button is-primary" type="submit">Add</button>
         <% if(ejs_message) { %>

@@ -412,7 +412,7 @@ app.post("/remove", (req, res) => {
             if(err) {
                 console.log(err);
             } else {
-                Adoption.updateOne({_id: req.body.removeButton}, {status: "Listing removed"}, (err, update) => {
+                Adoption.updateOne({listing: req.body.removeButton}, {status: "Listing removed"}, (err, update) => {
                     if(err) {
                         console.log(err);
                     } else {
