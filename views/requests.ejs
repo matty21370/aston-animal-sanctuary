@@ -28,7 +28,7 @@
                             <td><button name="approveButton" value="<%=listing.listing %>" class="button is-success" type="submit">Approve</button></td>
                         </form>
                         <form action="/deny" method="post">
-                            <td><button name="denyButton" value="<%=listing.listing%>" class="button is-danger" type="submit">Deny</button></td>
+                            <td><button name="denyButton" value="<%=listing._id%>" class="button is-danger" type="submit">Deny</button></td>
                         </form>
                     </tr>
                 <% }); %>

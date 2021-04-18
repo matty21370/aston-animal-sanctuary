@@ -14,12 +14,14 @@
         <table class="table">
             <thead>
                 <th><abbr title="ListingID">Listing ID</abbr></th>
+                <th><abbr title="ListingName">Listing Name</abbr></th>
                 <th><abbr title="Status">Status</abbr></th>
             </thead>
             <tbody>
                 <% ejs_listings.forEach(listing => { %>
                     <tr>
                         <td><%= listing.listing %></td>
+                        <td><%= listing.name %></td>
                         <td><%= listing.status %></td>
                     </tr>
                 <% }); %>

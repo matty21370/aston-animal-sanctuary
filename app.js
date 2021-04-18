@@ -353,9 +353,7 @@ app.get("/requests", (req, res) => {
 
 app.post("/approve", (req, res) => {
     Adoption.updateOne({_id: req.body.listingID}, {status: "Approved"}, (err, result) => {
-        console.log(req.body.listingID);
         if(!err) {
-            console.log(req.body.approveButton);
             Listing.findByIdAndDelete(req.body.approveButton, (err, remove) => {
                 if(err) {
                     console.log(err);
@@ -383,7 +381,6 @@ app.post("/approve", (req, res) => {
 app.post("/deny", (req, res) => {
     Adoption.updateOne({_id: req.body.denyButton}, {status: "Denied"}, (err, result) => {
         if(!err) {
-            console.log(result._id);
             res.redirect("/requests");
         } else {
             console.log(err);
